@@ -255,13 +255,22 @@ function renderBloomeryResults(results) {
   wrap.classList.remove('hidden');
 
   if (!results || results.length === 0) {
-    wrap.innerHTML = `
-      <div style="text-align: center; padding: 40px 20px; color: #666; background: #f8f9fa; border-radius: 8px; border: 1px dashed #ccc;">
-        <h3 style="margin-top:0; color:#E76F51;">No valid combinations found</h3>
-      </div>
-    `;
+    document.querySelector('.results-layout').style.display = 'none';
+    let noResults = document.getElementById('bloomery-no-results');
+    if (!noResults) {
+      noResults = document.createElement('div');
+      noResults.id = 'bloomery-no-results';
+      noResults.style.cssText = 'text-align:center;padding:40px 20px;color:#666;background:#f8f9fa;border-radius:8px;border:1px dashed #ccc;';
+      noResults.innerHTML = '<h3 style="margin-top:0;color:#E76F51;">No valid combinations found</h3>';
+      wrap.appendChild(noResults);
+    }
+    noResults.style.display = 'block';
     return;
   }
+
+  document.querySelector('.results-layout').style.display = '';
+  const noResults = document.getElementById('bloomery-no-results');
+  if (noResults) noResults.style.display = 'none';
 
   const best = results[0];
   const top3 = results.slice(0, 3);

@@ -613,15 +613,30 @@ function renderAlloyResults(results) {
   const wrap = document.getElementById('alloy-results-wrap');
   wrap.classList.remove('hidden');
 
+  // Hide or show the "no results" banner without destroying the DOM
+  let noResultsBanner = document.getElementById('alloy-no-results');
+  if (!noResultsBanner) {
+    noResultsBanner = document.createElement('div');
+    noResultsBanner.id = 'alloy-no-results';
+    noResultsBanner.style.cssText = 'text-align:center;padding:40px 20px;color:#666;background:var(--surface, #1a1d2e);border-radius:8px;border:1px dashed var(--border, #ccc);';
+    noResultsBanner.innerHTML = '<h3 style="margin-top:0;color:#E76F51;">No valid combinations found</h3>';
+    wrap.insertBefore(noResultsBanner, wrap.firstChild);
+  }
+
   if (!results || results.length === 0) {
-    wrap.innerHTML = `
-      <div style="text-align: center; padding: 40px 20px; color: #666; background: #f8f9fa; border-radius: 8px; border: 1px dashed #ccc;">
-        <h3 style="margin-top:0; color:#E76F51;">No valid combinations found</h3>
-      </div>
-    `;
-    wrap.classList.remove('hidden');
+    noResultsBanner.style.display = 'block';
+    // Hide normal content but keep it in the DOM
+    document.getElementById('alloy-highlights').style.display = 'none';
+    wrap.querySelector('.expandable-section').style.display = 'none';
+    wrap.querySelector('.graph-container').style.display = 'none';
     return;
   }
+
+  // Has results — hide "no results" banner and show normal content
+  noResultsBanner.style.display = 'none';
+  document.getElementById('alloy-highlights').style.display = '';
+  wrap.querySelector('.expandable-section').style.display = '';
+  wrap.querySelector('.graph-container').style.display = '';
 
   
   
