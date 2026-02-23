@@ -1,3 +1,4 @@
+
 const FORGE_DATA = {
   'light_hit': {
     name: 'Light Hit',
@@ -99,7 +100,6 @@ function renderValues() {
 }
 
 function updateForgeValue(input) {
-  console.log(input)
   const stepId = input.dataset.step;
   FORGE_DATA[stepId].value = parseInt(input.value) || 0;
   renderValues();
@@ -234,7 +234,7 @@ function forge_step_calculate(){
   }
   
   let last_steps = [null, null, null]
-  
+  let last_steps_priority = [null,null,null]
   
   const fixedPriorities = {
     'third_last': 0,
@@ -242,44 +242,54 @@ function forge_step_calculate(){
     'last': 2
   }
 
-  for (const slot of recipeState) {
-    let priority = slot.priority
-    
+  
+  let workingState = recipeState.map(slot => ({ ...slot }));
+
+
+
+  for (let i = workingState.length - 1; i >= 0; i--) {
+    let priority = workingState[i].priority
     if (priority in fixedPriorities) {
       const idx = fixedPriorities[priority]
       if (last_steps[idx] !== null) {
-        priority_warning(priority, recipeState[idx].priority)
+        
+        priority_warning(priority, workingState[i].priority)
         return
       }
-      last_steps[idx] = slot.step
+      last_steps[idx] = workingState[i].step
+      last_steps_priority[idx] = workingState[i].priority
+      workingState.splice(i, 1);
     
     }
-  }
+  } 
 
-  for (const slot of recipeState) {
-    let priority = slot.priority
-    
   
+  for (let i = workingState.length - 1; i >= 0; i--) {
+    let priority = workingState[i].priority
+    
     if (priority === 'not_last') {
       const idx = last_steps[0] === null ? 0 : last_steps[1] === null ? 1 : -1
       if (idx === -1) {
-        priority_warning(priority, recipeState[0].priority, recipeState[1].priority)
+        
+        priority_warning(priority, last_steps_priority[0], last_steps_priority[1])
         return
       }
-      last_steps[idx] = slot.step
+      last_steps[idx] = workingState[i].step
+      last_steps_priority[idx] = workingState[i].priority
+      workingState.splice(i, 1);
     }
 
   }
 
 
-  for (const slot of recipeState) {
-      let priority = slot.priority
+  for (let i = workingState.length - 1; i >= 0; i--) {
+      let priority = workingState[i].priority
       const idx = last_steps.findIndex(s => s === null)
       if (idx !== -1) {
-        last_steps[idx] = slot.step
+        last_steps[idx] =workingState[i].step
+        workingState.splice(i, 1);
       }
   }
-  
 
   
   // Implement greedy arlgoithm
@@ -295,25 +305,15 @@ function forge_step_calculate(){
   console.log("Target prev_steps = "+sum_items)
   console.log("Last steps: "+last_steps)
   const target=sum_items
-  let prev_steps=[]
   
-  // from 0 to the sum_items target 
-  let pos=0
-  let step_data
-  while (pos!=sum_items){
-    let least_abs=Infinity
-    Object.entries(FORGE_DATA).forEach(([key, step]) => {
-      diff_abs=Math.abs(target-(pos+step.value))
-      // Finds the closest value to the target from current pos
-      if (diff_abs<least_abs){
-        least_abs=diff_abs
-        step_data={ key, ...step };
-      }
-    })
-    pos=pos+step_data.value
-    prev_steps.push(step_data.key)
-  }
+  // TODO SELECT THE LAST VALUE FORM HITS
+  let prev_steps=[]
 
+
+  // prev_steps=GreedyAlgorithm(target,FORGE_DATA)
+  prev_steps=short_path(target,FORGE_DATA)
+  
+  
   results=prev_steps.concat(last_steps)
   
   renderResultsTable(results);
@@ -364,6 +364,8 @@ function renderResultsTable(steps) {
   
   // Show results section
   resultsWrap.classList.remove('hidden');
+
+  
   toggleStepTable()
   resultsWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
   
@@ -374,8 +376,15 @@ function renderResultsTable(steps) {
 
 
 function toggleStepTable() {
-  document.getElementById('step-table-body').classList.toggle('open');
-  document.getElementById('step-table-toggle').classList.toggle('open');
+
+  const body=document.getElementById('step-table-body')
+  const button=document.getElementById('step-table-toggle')
+  
+  if (!button.classList.contains('open')){
+    body.classList.toggle('open');  
+    button.classList.toggle('open');
+  }
+
 }
 
 
@@ -508,7 +517,6 @@ function selectItem(element, type) {
 }
 
 function clearSelection() {
-  console.log(currentDragInfo)
   if (currentDragInfo.id!== null) {
     currentDragInfo.element.classList.remove('selected');
     currentDragInfo = {
@@ -520,7 +528,7 @@ function clearSelection() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  renderValues();
+  // renderValues();
   renderForgeDraggableOptions();
   renderPriorities();
 
@@ -528,7 +536,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   steps_draggables.forEach(draggable => {
     draggable.addEventListener('dragstart', (e) => {
-      
+      selectItem(draggable,'step')
       e.dataTransfer.effectAllowed = 'copy'; 
       
       currentDragInfo = {
@@ -548,7 +556,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   priority_draggables.forEach(draggable => {
     draggable.addEventListener('dragstart', (e) => {
-      
+      selectItem(draggable,'priority')
       e.dataTransfer.effectAllowed = 'copy'; 
       
       currentDragInfo = {
