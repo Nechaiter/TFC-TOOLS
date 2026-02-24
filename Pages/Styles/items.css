@@ -235,3 +235,46 @@ textarea {
 }
 .graph-placeholder svg { opacity: 0.4; }
 .graph-placeholder span { font-size: 0.75rem; }
+
+
+/* ========== CONFIG INPUTS  ========== */
+.config-row {
+  display: flex;
+  gap: 16px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.config-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-secondary, #1a1d2e);
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border, #2d3142);
+}
+
+.config-group label {
+  font-size: 0.75rem;
+  color: var(--fg-muted, #8a91a6);
+  font-weight: 500;
+}
+
+.config-group input {
+  width: 70px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--fg, #e2e8f0);
+  font-family: var(--font-mono, monospace);
+  font-size: 0.8125rem;
+  padding: 4px 6px;
+  border-radius: 4px;
+  text-align: center;
+  transition: border-color 0.2s;
+}
+
+.config-group input:focus {
+  outline: none;
+  border-color: #E76F51;
+}

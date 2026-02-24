@@ -183,6 +183,11 @@ let recipeState = [
     { step: null, priority: null }, 
     { step: null, priority: null }  
 ];
+
+
+
+
+
 function forge_step_calculate(){
   const btn = document.getElementById('forge-calc-btn');
   const resultsWrap=document.getElementById('forge-results-wrap');
@@ -192,10 +197,13 @@ function forge_step_calculate(){
   warning.innerHTML = ''
   resultsWrap.classList.add('hidden'); 
   for (const slot of recipeState) {
-    if (slot.step === null || slot.priority === null) {
+    if ((slot.step !== null || slot.priority !== null) && 
+        (slot.step !== null && slot.priority === null) ||
+        (slot.step == null && slot.priority !== null)
+    ) {
       
       warning.innerHTML = `
-          <h3 style="margin-top:0; color:#E76F51;">Please define both a step and priority for all 3 slots.</h3>
+          <h3 style="margin-top:0; color:#E76F51;">Please define both a step and a priority for each slot where only one is set.</h3>
         
         `;
       warning.classList.remove('hidden');
@@ -208,10 +216,19 @@ function forge_step_calculate(){
   //target position to go
   let sum_items = 0
   for (const slot of recipeState) {
-    const current_value=FORGE_DATA[slot.step].value
-    sum_items=sum_items-current_value
+    
+    if (slot.step!==null && slot.priority !== null){
+      const current_value=FORGE_DATA[slot.step].value
+      sum_items=sum_items-current_value
+    }    
   }
-  
+  console.log(`Sum of the slots items: ${sum_items}` )
+  const target_input=document.getElementById('forge-target-value');
+  const value = Number(target_input.value);
+  if (!isNaN(value) && value>0){
+    sum_items=sum_items+value
+  }
+
   function priority_warning(priority, problem, problem2=''){
     if (problem2!==''){
       warning.innerHTML = `
@@ -281,7 +298,6 @@ function forge_step_calculate(){
 
   }
 
-
   for (let i = workingState.length - 1; i >= 0; i--) {
       let priority = workingState[i].priority
       const idx = last_steps.findIndex(s => s === null)
@@ -291,7 +307,48 @@ function forge_step_calculate(){
       }
   }
 
+  function show_filled_priority_warning(message){
+    warning.classList.add('hidden');
+    warning.innerHTML = ''
+    resultsWrap.classList.add('hidden'); 
+    warning.innerHTML = `
+          <h3 style="margin-top:0; color:#E76F51;">${message}</h3>
+          `;
+      warning.classList.remove('hidden');
+      btn.disabled = false;
+      warning.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
+    
+
+  const filledSlots = recipeState.filter(slot => slot.step !== null).length;
+
+
+  for (const slot of recipeState) {
+      if (slot.step!==null && slot.priority !== null){
+        if (slot.priority === 'third_last' && filledSlots < 3){
+          show_filled_priority_warning(`You need at least 3 steps assigned to use the "Third Last" priority.`)
+          return
+        } 
+        if (slot.priority === 'second_last' && filledSlots < 2){
+          show_filled_priority_warning(`You need at least 2 steps assigned to use the "Second Last" priority.`)
+          return
+        }
+        if (slot.priority === 'not_last' && filledSlots === 1){
+          show_filled_priority_warning(`You need at least 2 step assigned to use the "Not Last" priority.`)
+          return
+        }
+      }    
+    }
+
+
   
+
+
+
+  
+
+  last_steps = last_steps.filter(step => step !== null);
   // Implement greedy arlgoithm
 
   const sortedForgeData = Object.entries(FORGE_DATA)

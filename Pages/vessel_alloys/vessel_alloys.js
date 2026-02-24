@@ -148,12 +148,12 @@ function alloysRemoveMineral(mIdx) {
 
 
 // BOUNDS
-MAX_VESSEL_MB=3024
-MAX_TOTAL_ITEM=64
-MAX_ITEM_PER_SLOT=16
 
-MB_TO_INGOT=144
-MAX_SLOTS=4
+const MAX_TOTAL_ITEM=64
+const MAX_ITEM_PER_SLOT=16
+
+
+const MAX_SLOTS=4
 
 // Helper to let UI update
 const delay = (ms) => new Promise(res => setTimeout(res, ms));
@@ -384,7 +384,10 @@ async function alloysCalculate() {
     }
   }
 
-
+  const mbInput = document.getElementById('alloy-mb-per-ingot');
+  const vesselInput = document.getElementById('alloy-max-vessel');
+  MB_TO_INGOT = mbInput ? (parseInt(mbInput.value) || 144) : 144;
+  MAX_VESSEL_MB = vesselInput ? (parseInt(vesselInput.value) || 3024) : 3024;
 
 
 
@@ -540,7 +543,7 @@ async function alloysCalculate() {
       slots:sum_slots, //
       weighted_sum:weighted_sum, //
       minerals:minerals_detail,
-      ingots:sum_mb/144
+      ingots:sum_mb/MB_TO_INGOT
     }
 
     values.push(point_of_interes)

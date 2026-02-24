@@ -49,9 +49,29 @@
   <section id="view-alloys" class="page">
     <div class="alloy-full">
       <header class="page-header">
+        
         <h1>Alloys Calculator</h1>
         <p>Define up to 3 minerals with custom coefficients and find combinations that produce <strong style='color:aliceblue'>exact ingots with 0% alloy leftover.</strong></p>
       </header>
+      <div class="config-row">
+        <div class="config-group">
+          <label for="alloy-mb-per-ingot">mB per ingot:</label>
+          <input id="alloy-mb-per-ingot" type="number" min="1" value="144">
+          <div class="preset-btns">
+            <button type="button" class="btn-xs" onclick="document.getElementById('alloy-mb-per-ingot').value = 144">144</button>
+            <button type="button" class="btn-xs" onclick="document.getElementById('alloy-mb-per-ingot').value = 100">100</button>
+          </div>
+        </div>
+        
+        <div class="config-group">
+          <label for="alloy-max-vessel">Vessel Max (mB):</label>
+          <input id="alloy-max-vessel" type="number" min="1" value="3024">
+          <div class="preset-btns">
+            <button type="button" class="btn-xs" onclick="document.getElementById('alloy-max-vessel').value = 3024">3024</button>
+            <button type="button" class="btn-xs" onclick="document.getElementById('alloy-max-vessel').value = 3000">3000</button>
+          </div>
+        </div>
+      </div>
 
       <!-- 3-Column Mineral Definition -->
       <div id="alloys-minerals" class="minerals-grid"></div>

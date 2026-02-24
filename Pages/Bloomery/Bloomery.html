@@ -53,6 +53,17 @@
         <h1>Bloomery Calculator</h1>
         <p>Define iron ore coefficients and find combinations with <strong style='color:aliceblue'>0% iron ore waste</strong>, every mB of ore converts into exact ingots with no leftovers.</p>
       </header>
+      <div class="config-row">
+        <div class="config-group">
+          <label for="mb-per-ingot">mB per ingot:</label>
+          <input id="mb-per-ingot" type="number" min="1" value="144" onblur="if(typeof onBloomeryMBChange === 'function') onBloomeryMBChange(this.value)">
+          <div class="preset-btns">
+            <button type="button" class="btn-xs" onclick="document.getElementById('mb-per-ingot').value = 144">144</button>
+            <button type="button" class="btn-xs" onclick="document.getElementById('mb-per-ingot').value = 100">100</button>
+          </div>
+        </div>
+      </div>
+      
 
       <!-- Iron Configuration Card -->
       <div class="card">

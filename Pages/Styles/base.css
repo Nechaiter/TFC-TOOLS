@@ -32,6 +32,16 @@ body {
 .hidden { display: none !important; }
 .mono { font-family: var(--font-mono); }
 
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield; /* Firefox */
+}
+
 /* ========== PAGE LAYOUT ========== */
 .page {
     max-width: 1200px;

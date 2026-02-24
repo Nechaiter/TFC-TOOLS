@@ -180,9 +180,10 @@ async function performBloomeryCalculations() {
 
   const results = [];
 
-  
+  const mbInput = document.getElementById('mb-per-ingot');
+  const MB_TO_INGOT = mbInput ? (parseInt(mbInput.value) || 144) : 144;  
   const MAX_TOTAL_ITEMS = 48;
-  const MB_TO_INGOT = 144;
+  
 
   function cartesian_product(bounds, callback, current = [], index = 0) {
     if (index== bounds.length){

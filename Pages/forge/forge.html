@@ -51,7 +51,16 @@
         <h1>Forge Calculator</h1>
         <p>Build your forging recipe by combining steps and priorities.</p>
         <div class="target-instruction">
-          <p style='color:aliceblue'>Position the green crosshair directly below the red one to complete the calculation.</p>
+          <div style="flex: 1;">
+            <p style="color:aliceblue; margin-bottom: 12px; margin-top: 0;">
+              Move the <span style="color: #00ff00;">green crosshair</span> below the <span style="color: #ff4444;">red crosshair</span> to complete the calculation.<br>
+              <span style="color: #ffd700;">Or, set the target numerically below (starts from 0):</span>
+            </p>
+            <div class="config-group">
+              <label for="forge-target-value">Target (red crosshair):</label>
+              <input id="forge-target-value" type="number" value="" placeholder="ex: 80">
+            </div>
+          </div>
           <img src="./Images/target.png" alt="Target alignment example" class="target-img">
         </div>
       </header>
