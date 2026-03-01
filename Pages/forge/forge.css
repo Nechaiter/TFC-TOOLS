@@ -441,6 +441,18 @@
   box-shadow: 0 0 8px currentColor;
 }
 
+.user-select{
+  -webkit-user-select: none; 
+  -ms-user-select: none; 
+  
+  
+  user-select: none;
+}
+
+
+
+
+
 /* ========== MOBILE RESPONSIVE ========== */
 @media (max-width: 768px) {
   .forge-full {
