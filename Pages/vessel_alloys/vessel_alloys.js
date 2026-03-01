@@ -241,7 +241,7 @@ function updateDesmosGraph(results) {
       calculator.setExpression({
         id:'MB_limit',
         type:'expression',
-        latex: `x+y=3024`,
+        latex: `x+y=${MAX_VESSEL_MB}`,
         color: Desmos.Colors.RED
       })
       if (minerals[0].ratioMin===0){
