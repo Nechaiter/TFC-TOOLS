@@ -3,72 +3,72 @@ const FORGE_DATA = {
     'light_hit': {
         name: 'Light Hit',
         color: 'cyan',
-        icon: './Images/steps/light_hit.png',
+        icon: './images/steps/light_hit.png',
         value: -3
     },
     'medium_hit': {
         name: 'Medium Hit',
         color: 'light_blue',
-        icon: './Images/steps/medium_hit.png',
+        icon: './images/steps/medium_hit.png',
         value: -6
     },
     'hard_hit': {
         name: 'Hard Hit',
         color: 'blue',
-        icon: './Images/steps/hard_hit.png',
+        icon: './images/steps/hard_hit.png',
         value: -9
     },
     'draw': {
         name: 'Draw',
         color: 'purple',
-        icon: './Images/steps/draw.png',
+        icon: './images/steps/draw.png',
         value: -15
     },
     'punch': {
         name: 'Punch',
         color: 'green',
-        icon: './Images/steps/punch.png',
+        icon: './images/steps/punch.png',
         value: 2
     },
     'bend': {
         name: 'Bend',
         color: 'yellow',
-        icon: './Images/steps/bend.png',
+        icon: './images/steps/bend.png',
         value: 7
     },
     'upset': {
         name: 'Upset',
         color: 'brown',
-        icon: './Images/steps/upset.png',
+        icon: './images/steps/upset.png',
         value: 13
     },
     'shrink': {
         name: 'Shrink',
         color: 'red',
-        icon: './Images/steps/shrink.png',
+        icon: './images/steps/shrink.png',
         value: 16
     },
 };
 const PRIORITY_LEVELS = {
     'not_last': {
         name: 'Not Last',
-        icon: './Images/priority/not_last.png'
+        icon: './images/priority/not_last.png'
     },
     'any': {
         name: 'Any',
-        icon: './Images/priority/any.png'
+        icon: './images/priority/any.png'
     },
     'last': {
         name: 'Last',
-        icon: './Images/priority/last.png'
+        icon: './images/priority/last.png'
     },
     'second_last': {
         name: 'Second Last',
-        icon: './Images/priority/second_last.png'
+        icon: './images/priority/second_last.png'
     },
     'third_last': {
         name: 'Third Last',
-        icon: './Images/priority/third_last.png'
+        icon: './images/priority/third_last.png'
     }
 };
 function renderValues() {
@@ -113,7 +113,7 @@ function renderForgeDraggableOptions() {
         if (key === 'light_hit') {
             draggable.setAttribute('data-color', "grey");
             draggable.innerHTML = `
-      <img class="step-icon" src="./Images/steps/hit_placeholder.png">
+      <img class="step-icon" src="./images/steps/hit_placeholder.png">
       <span>${displayName}</span>
     `;
         }
