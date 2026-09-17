@@ -1,5 +1,37 @@
+import * as forgeSteps from "./forge_steps_algorithms.js";
 
-const FORGE_DATA = {
+type ForgeStepKey = 'light_hit' | 'medium_hit' | 'hard_hit' | 'draw' | 'punch' | 'bend' | 'upset' | 'shrink';
+
+interface ForgeStepData {
+  name: string;
+  color: string;
+  icon: string;
+  value: number;
+}
+
+type ForgeData = Record<ForgeStepKey, ForgeStepData>;
+
+type PriorityKey = 'not_last' | 'any' | 'last' | 'second_last' | 'third_last';
+
+interface PriorityData {
+  name: string;
+  icon: string;
+}
+
+type PriorityLevels = Record<PriorityKey, PriorityData>;
+
+interface RecipeSlot {
+  step: ForgeStepKey | null;
+  priority: PriorityKey | null;
+}
+
+interface DragInfo {
+  element: HTMLElement | null;
+  type: string | null;
+  id: DOMStringMap | null;
+}
+
+const FORGE_DATA: ForgeData = {
   'light_hit': {
     name: 'Light Hit',
     color: 'cyan',
@@ -51,7 +83,7 @@ const FORGE_DATA = {
   
 };
 
-const PRIORITY_LEVELS = {
+const PRIORITY_LEVELS: PriorityLevels = {
   'not_last':{
     name:'Not Last',
     icon:'./Images/priority/not_last.png'
@@ -74,11 +106,11 @@ const PRIORITY_LEVELS = {
   }
 }
 
-function renderValues() {
-  const grid = document.getElementById('values-grid');
+function renderValues(): void {
+  const grid = document.getElementById('values-grid') as HTMLElement;
   grid.innerHTML = '';
 
-  Object.keys(FORGE_DATA).forEach(key =>{
+  (Object.keys(FORGE_DATA) as ForgeStepKey[]).forEach(key =>{
     const group = document.createElement('div');
     group.className = 'value-input-group';
 
@@ -90,7 +122,7 @@ function renderValues() {
           class="value-input"
           data-step="${key}"
           value="${FORGE_DATA[key].value}"
-          onchange="updateForgeValue(this)"
+          data-action="update-value"
         />
       </div>
     `;
@@ -99,18 +131,18 @@ function renderValues() {
 
 }
 
-function updateForgeValue(input) {
-  const stepId = input.dataset.step;
+function updateForgeValue(input: HTMLInputElement): void {
+  const stepId = input.dataset.step as ForgeStepKey;
   FORGE_DATA[stepId].value = parseInt(input.value) || 0;
   renderValues();
   clearAllRecipe();
 }
 
-function renderForgeDraggableOptions() {
-  const grid = document.getElementById('options-grid');
+function renderForgeDraggableOptions(): void {
+  const grid = document.getElementById('options-grid') as HTMLElement;
   grid.innerHTML = '';
 
-  for (const key of Object.keys(FORGE_DATA)) {
+  for (const key of Object.keys(FORGE_DATA) as ForgeStepKey[]) {
     if (key === 'medium_hit' || key === 'hard_hit') continue;
 
     const draggable = document.createElement('div');
@@ -137,9 +169,9 @@ function renderForgeDraggableOptions() {
 
     
 
-    draggable.addEventListener('dragstart', (e) => {
-      draggedStep = key;
-      e.dataTransfer.effectAllowed = 'copy';
+    draggable.addEventListener('dragstart', (e: DragEvent) => {
+      let draggedStep = key;
+      e.dataTransfer!.effectAllowed = 'copy';
     });
 
     draggable.addEventListener('click', () => {
@@ -149,11 +181,11 @@ function renderForgeDraggableOptions() {
   }
 }
 
-function renderPriorities() {
-  const grid = document.getElementById('priority-grid');
+function renderPriorities(): void {
+  const grid = document.getElementById('priority-grid') as HTMLElement;
   grid.innerHTML = '';
 
-  Object.keys(PRIORITY_LEVELS).forEach(key =>{
+  (Object.keys(PRIORITY_LEVELS) as PriorityKey[]).forEach(key =>{
     const draggable = document.createElement('div');
     draggable.className = 'priority-dragg';
     draggable.draggable = true;
@@ -164,9 +196,9 @@ function renderPriorities() {
       <span class="priority-number">${key}</span>
     `;
 
-    draggable.addEventListener('dragstart', (e) => {
-      draggedPriority = key;
-      e.dataTransfer.effectAllowed = 'copy';
+    draggable.addEventListener('dragstart', (e: DragEvent) => {
+      let draggedPriority = key;
+      e.dataTransfer!.effectAllowed = 'copy';
     });
 
     draggable.addEventListener('click', () => {
@@ -178,7 +210,7 @@ function renderPriorities() {
   })
 
 }
-let recipeState = [
+let recipeState: RecipeSlot[] = [
     { step: null, priority: null }, 
     { step: null, priority: null }, 
     { step: null, priority: null }  
@@ -188,10 +220,10 @@ let recipeState = [
 
 
 
-function forge_step_calculate(){
-  const btn = document.getElementById('forge-calc-btn');
-  const resultsWrap=document.getElementById('forge-results-wrap');
-  const warning = document.getElementById('forge-warning');
+function forge_step_calculate(): void {
+  const btn = document.getElementById('forge-calc-btn') as HTMLButtonElement;
+  const resultsWrap = document.getElementById('forge-results-wrap') as HTMLElement;
+  const warning = document.getElementById('forge-warning') as HTMLElement;
   if(btn) btn.disabled = true;
   warning.classList.add('hidden');
   warning.innerHTML = ''
@@ -213,7 +245,7 @@ function forge_step_calculate(){
     }
   }
 
-  //target position to go
+  // Target position to reach.
   let sum_items = 0
   for (const slot of recipeState) {
     
@@ -223,13 +255,13 @@ function forge_step_calculate(){
     }    
   }
   console.log(`Sum of the slots items: ${sum_items}` )
-  const target_input=document.getElementById('forge-target-value');
+  const target_input = document.getElementById('forge-target-value') as HTMLInputElement;
   const value = Number(target_input.value);
   if (!isNaN(value) && value>0){
     sum_items=sum_items+value
   }
 
-  function priority_warning(priority, problem, problem2=''){
+  function priority_warning(priority: PriorityKey, problem: string, problem2: string = ''): void {
     if (problem2!==''){
       warning.innerHTML = `
           <h3 style="margin-top:0; color:#E76F51;">Please define a valid priority, currently
@@ -250,10 +282,10 @@ function forge_step_calculate(){
     warning.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
   
-  let last_steps = [null, null, null]
-  let last_steps_priority = [null,null,null]
+  let last_steps: (ForgeStepKey | null)[] = [null, null, null]
+  let last_steps_priority: (PriorityKey | null)[] = [null,null,null]
   
-  const fixedPriorities = {
+  const fixedPriorities: Record<string, number> = {
     'third_last': 0,
     'second_last': 1,
     'last': 2
@@ -266,11 +298,11 @@ function forge_step_calculate(){
 
   for (let i = workingState.length - 1; i >= 0; i--) {
     let priority = workingState[i].priority
-    if (priority in fixedPriorities) {
+    if (priority!==null && priority in fixedPriorities) {
       const idx = fixedPriorities[priority]
       if (last_steps[idx] !== null) {
         
-        priority_warning(priority, workingState[i].priority)
+        priority_warning(priority, workingState[i].priority as string)
         return
       }
       last_steps[idx] = workingState[i].step
@@ -288,7 +320,7 @@ function forge_step_calculate(){
       const idx = last_steps[0] === null ? 0 : last_steps[1] === null ? 1 : -1
       if (idx === -1) {
         
-        priority_warning(priority, last_steps_priority[0], last_steps_priority[1])
+        priority_warning(priority, last_steps_priority[0] as string, last_steps_priority[1] as string)
         return
       }
       last_steps[idx] = workingState[i].step
@@ -302,12 +334,12 @@ function forge_step_calculate(){
       let priority = workingState[i].priority
       const idx = last_steps.findIndex(s => s === null)
       if (idx !== -1) {
-        last_steps[idx] =workingState[i].step
+        last_steps[idx] = workingState[i].step
         workingState.splice(i, 1);
       }
   }
 
-  function show_filled_priority_warning(message){
+  function show_filled_priority_warning(message: string): void {
     warning.classList.add('hidden');
     warning.innerHTML = ''
     resultsWrap.classList.add('hidden'); 
@@ -346,16 +378,18 @@ function forge_step_calculate(){
 
 
 
+
+
   
 
   last_steps = last_steps.filter(step => step !== null);
-  // Implement greedy arlgoithm
+  // Implement greedy algorithm.
 
-  const sortedForgeData = Object.entries(FORGE_DATA)
+  const sortedForgeData = (Object.entries(FORGE_DATA) as [ForgeStepKey, ForgeStepData][])
   .map(([key, data]) => ({ key, ...data }))
   .sort((a, b) => a.value - b.value);
 
-  let results=[]
+  let results: string[]=[]
   
   // target sum_items = 0
   
@@ -363,25 +397,25 @@ function forge_step_calculate(){
   console.log("Last steps: "+last_steps)
   const target=sum_items
   
-  // TODO SELECT THE LAST VALUE FORM HITS
-  let prev_steps=[]
+  // TODO: select the last value from hits.
+  let prev_steps: string[]=[]
 
 
   // prev_steps=GreedyAlgorithm(target,FORGE_DATA)
-  prev_steps=short_path(target,FORGE_DATA)
+  prev_steps=forgeSteps.short_path(target,FORGE_DATA)
   
   
-  results=prev_steps.concat(last_steps)
+  results=prev_steps.concat(last_steps as string[])
   
   renderResultsTable(results);
   if(btn) btn.disabled = false;
 
 
 }
-function renderResultsTable(steps) {
-  const table = document.getElementById('step-data-table');
-  const resultsWrap = document.getElementById('forge-results-wrap');
-  const pointsCount = document.getElementById('step-points-count');
+function renderResultsTable(steps: string[]): void {
+  const table = document.getElementById('step-data-table') as HTMLElement;
+  const resultsWrap = document.getElementById('forge-results-wrap') as HTMLElement;
+  const pointsCount = document.getElementById('step-points-count') as HTMLElement;
   
   table.innerHTML = '';
   
@@ -400,7 +434,7 @@ function renderResultsTable(steps) {
   
   console.log(steps)
   steps.forEach((stepKey, index) => {
-    const stepData = FORGE_DATA[stepKey];
+    const stepData = FORGE_DATA[stepKey as ForgeStepKey];
     const row = document.createElement('tr');
     row.innerHTML = `
       <td>${index + 1}</td>
@@ -432,10 +466,10 @@ function renderResultsTable(steps) {
 
 
 
-function toggleStepTable() {
+function toggleStepTable(): void {
 
-  const body=document.getElementById('step-table-body')
-  const button=document.getElementById('step-table-toggle')
+  const body = document.getElementById('step-table-body') as HTMLElement
+  const button = document.getElementById('step-table-toggle') as HTMLElement
   
   if (!button.classList.contains('open')){
     body.classList.toggle('open');  
@@ -446,13 +480,14 @@ function toggleStepTable() {
 
 
 
-function clearAllRecipe() {
+function clearAllRecipe(): void {
  
   const stepSlots = document.querySelectorAll('.slot-step');
   stepSlots.forEach(slot => {
-    slot.innerHTML = ''; 
-    slot.style.border=''
-    slot.style.borderRadius = '';
+    const el = slot as HTMLElement;
+    el.innerHTML = ''; 
+    el.style.border=''
+    el.style.borderRadius = '';
 
     
   });
@@ -460,8 +495,9 @@ function clearAllRecipe() {
  
   const prioritySlots = document.querySelectorAll('.slot-priority');
   prioritySlots.forEach(slot => {
-    slot.innerHTML = ''; 
-    slot.style.border = ''; 
+    const el = slot as HTMLElement;
+    el.innerHTML = ''; 
+    el.style.border = ''; 
   });
 
   
@@ -475,18 +511,7 @@ function clearAllRecipe() {
 }
 
 
-document.addEventListener('DOMContentLoaded', () => {
-
-    const clearBtn = document.querySelector('.btn-clear-all');
-    if(clearBtn) {
-        clearBtn.addEventListener('click', clearAllRecipe);
-    }
-    
-});
-
-
-
-function handleStepDrop(e,slot) {
+function handleStepDrop(e: Event, slot: HTMLElement): void {
   e.preventDefault();
 
 
@@ -494,9 +519,9 @@ function handleStepDrop(e,slot) {
   
   const mobileQuery = window.matchMedia('(max-width: 768px)');
 
-  const step_inner = e.currentTarget;
+  const step_inner = e.currentTarget as HTMLElement;
   step_inner.innerHTML = ''; 
-  const cloned = currentDragInfo.element.cloneNode(true);
+  const cloned = currentDragInfo.element!.cloneNode(true) as HTMLElement;
   cloned.style.margin = '0';
   cloned.style.opacity = '1';
   cloned.draggable = false;
@@ -508,12 +533,15 @@ function handleStepDrop(e,slot) {
   else cloned.style.aspectRatio = '1'
   
   step_inner.appendChild(cloned);
+  const targetChild = (e.target as HTMLElement).children[0] as HTMLElement;
 
-  recipeState[slot.dataset.slot].step=e.target.children[0].dataset.stepId
+  recipeState[Number(slot.dataset.slot)].step =
+    (targetChild.getAttribute('data-step-id') as ForgeStepKey) || (targetChild.dataset.stepId as ForgeStepKey)
+
   const span = cloned.querySelector('span');
   if (span){
     const currentText = span.innerHTML
-    current_value=FORGE_DATA[e.target.children[0].dataset.stepId].value
+    const current_value = FORGE_DATA[targetChild.dataset.stepId as ForgeStepKey].value
     if (currentText==='Hit'){
       span.innerHTML=`${currentText}`
     }
@@ -529,14 +557,14 @@ function handleStepDrop(e,slot) {
   
 }
 
-function handlePriorityDrop(e,slot) {
+function handlePriorityDrop(e: Event, slot: HTMLElement): void {
   e.preventDefault();
   
   
-  if (!currentDragInfo ||currentDragInfo.type !== 'priority') return;
-  const priority_inner = e.currentTarget;
+  if (!currentDragInfo || currentDragInfo.type !== 'priority') return;
+  const priority_inner = e.currentTarget as HTMLElement;
   priority_inner.innerHTML = '';
-  const cloned = currentDragInfo.element.cloneNode(true);
+  const cloned = currentDragInfo.element!.cloneNode(true) as HTMLElement;
   cloned.style.margin = '0';
   cloned.style.opacity = '1';
   cloned.draggable = false;
@@ -547,8 +575,9 @@ function handlePriorityDrop(e,slot) {
   slot.style.border = "none"
   priority_inner.appendChild(cloned);
 
-  recipeState[slot.dataset.slot].priority=e.target.children[0].dataset.priority
-  
+  const targetChild = (e.target as HTMLElement).children[0] as HTMLElement;
+
+  recipeState[Number(slot.dataset.slot)].priority = targetChild.dataset.priority as PriorityKey
 }
 // currentDragInfo = {
 //             element: selectedItem.element,
@@ -556,12 +585,12 @@ function handlePriorityDrop(e,slot) {
 //             id: selectedItem.element.dataset.stepId
 //         };
 
-let currentDragInfo = {
+let currentDragInfo: DragInfo = {
             element: null,
             type: null,
             id: null
         };
-function selectItem(element, type) {
+function selectItem(element: HTMLElement, type: string): void {
   
   clearSelection();
   
@@ -573,9 +602,9 @@ function selectItem(element, type) {
   element.classList.add('selected');
 }
 
-function clearSelection() {
-  if (currentDragInfo.id!== null) {
-    currentDragInfo.element.classList.remove('selected');
+function clearSelection(): void {
+  if (currentDragInfo.id !== null) {
+    currentDragInfo.element!.classList.remove('selected');
     currentDragInfo = {
             element: null,
             type: null,
@@ -589,53 +618,55 @@ document.addEventListener('DOMContentLoaded', () => {
   renderForgeDraggableOptions();
   renderPriorities();
 
-  const steps_draggables=document.querySelectorAll('.forge-option-dragg');
+  const steps_draggables = document.querySelectorAll('.forge-option-dragg');
 
   steps_draggables.forEach(draggable => {
-    draggable.addEventListener('dragstart', (e) => {
-      selectItem(draggable,'step')
-      e.dataTransfer.effectAllowed = 'copy'; 
+    draggable.addEventListener('dragstart', (e: Event) => {
+      selectItem(draggable as HTMLElement,'step')
+      const de = e as DragEvent;
+      de.dataTransfer!.effectAllowed = 'copy'; 
       
       currentDragInfo = {
-            element: draggable,
+            element: draggable as HTMLElement,
             type: 'step',
-            id: draggable.dataset
+            id: (draggable as HTMLElement).dataset
         };
-      e.target.style.opacity = '1';
+      (e.target as HTMLElement).style.opacity = '1';
     });
 
-    draggable.addEventListener('dragend', (e) => {
-      e.target.style.opacity = '1';
+    draggable.addEventListener('dragend', (e: Event) => {
+      (e.target as HTMLElement).style.opacity = '1';
     });
   });
 
-  const priority_draggables=document.querySelectorAll('.priority-dragg');
+  const priority_draggables = document.querySelectorAll('.priority-dragg');
 
   priority_draggables.forEach(draggable => {
-    draggable.addEventListener('dragstart', (e) => {
-      selectItem(draggable,'priority')
-      e.dataTransfer.effectAllowed = 'copy'; 
+    draggable.addEventListener('dragstart', (e: Event) => {
+      selectItem(draggable as HTMLElement,'priority')
+      const de = e as DragEvent;
+      de.dataTransfer!.effectAllowed = 'copy'; 
       
       currentDragInfo = {
-            element: draggable,
+            element: draggable as HTMLElement,
             type: 'priority',
-            id: draggable.dataset
+            id: (draggable as HTMLElement).dataset
         };
       
-      e.target.style.opacity = '1';
+      (e.target as HTMLElement).style.opacity = '1';
     });
 
-    draggable.addEventListener('dragend', (e) => {
-      e.target.style.opacity = '1';
+    draggable.addEventListener('dragend', (e: Event) => {
+      (e.target as HTMLElement).style.opacity = '1';
     });
   });
 
-  document.addEventListener('keydown', (e) => {
+  document.addEventListener('keydown', (e: KeyboardEvent) => {
     if (e.key === 'Escape') clearSelection();
   });
 
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('.forge-option-dragg, .priority-dragg, .recipe-slot')) {
+  document.addEventListener('click', (e: MouseEvent) => {
+    if (!(e.target as HTMLElement).closest('.forge-option-dragg, .priority-dragg, .recipe-slot')) {
       clearSelection();
     }
   });
@@ -643,20 +674,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.querySelectorAll('.slot-step').forEach(slot => {
       slot.addEventListener('click', e =>{
-        handleStepDrop(e, slot);
+        handleStepDrop(e, slot as HTMLElement);
       }); 
 
-      slot.addEventListener('dragover', e => e.preventDefault()); 
-      slot.addEventListener('drop', (e)=>{handleStepDrop(e,slot)});
+      slot.addEventListener('dragover', (e: Event) => e.preventDefault()); 
+      slot.addEventListener('drop', (e: Event)=>{handleStepDrop(e,slot as HTMLElement)});
   });
 
   document.querySelectorAll('.slot-priority').forEach(slot => {
       slot.addEventListener('click', e =>{
-        handlePriorityDrop(e, slot);
+        handlePriorityDrop(e, slot as HTMLElement);
       }); 
 
-      slot.addEventListener('dragover', e => e.preventDefault()); 
-      slot.addEventListener('drop', (e)=>{handlePriorityDrop(e,slot)});
+      slot.addEventListener('dragover', (e: Event) => e.preventDefault()); 
+      slot.addEventListener('drop', (e: Event)=>{handlePriorityDrop(e,slot as HTMLElement)});
+  });
+
+  document.getElementById('nav-back-menu')?.addEventListener('click', () => showView('menu'));
+  document.getElementById('nav-bloomery')?.addEventListener('click', () => showView('Bloomery'));
+  document.getElementById('nav-alloys')?.addEventListener('click', () => showView('alloys'));
+  document.getElementById('forge-calc-btn')?.addEventListener('click', forge_step_calculate);
+  document.getElementById('step-table-toggle')?.addEventListener('click', toggleStepTable);
+  document.querySelector('.btn-clear-all')?.addEventListener('click', clearAllRecipe);
+  document.getElementById('values-grid')?.addEventListener('change', event => {
+    const target = event.target as HTMLInputElement;
+    if (target.dataset.action === 'update-value') updateForgeValue(target);
   });
 
 

@@ -21,28 +21,28 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <link href="./Bloomery.css" rel="stylesheet">
-  <link href="../Styles/base.css" rel="stylesheet">
-  <link href="../Styles/navbar.css" rel="stylesheet">
-  <link href="../Styles/items.css" rel="stylesheet">
+  <link href="/pages/bloomery/bloomery.css" rel="stylesheet">
+  <link href="/pages/styles/base.css" rel="stylesheet">
+  <link href="/pages/styles/navbar.css" rel="stylesheet">
+  <link href="/pages/styles/items.css" rel="stylesheet">
 
 
   <script src="https://www.desmos.com/api/v1.8/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"></script>
-  <script src="../routing.js"></script>
-  <script src="Bloomery.js"></script>
+  <script src="/dist/routing.js"></script>
+  <script type="module" src="/dist/pages/bloomery/bloomery.js"></script>
 </head>
 <body>
 
   <!-- ==================== NAVIGATION ==================== -->
   <nav id="nav" class="nav">
-    <button class="nav-back" onclick="showView('menu')">
+    <button class="nav-back" id="nav-back-menu">
       <svg viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       Back to Menu
     </button>
     <div class="nav-divider"></div>
     <button id="nav-bloomery" class="nav-link">Bloomery</button>
-    <button id="nav-alloys" class="nav-link" onclick="showView('vessel_alloys')">Alloys</button>
-    <button id="nav-forge" class="nav-link" onclick="showView('forge')">Forge </button>
+    <button id="nav-alloys" class="nav-link">Alloys</button>
+    <button id="nav-forge" class="nav-link">Forge </button>
   </nav>
 
 
@@ -56,10 +56,10 @@
       <div class="config-row">
         <div class="config-group">
           <label for="mb-per-ingot">mB per ingot:</label>
-          <input id="mb-per-ingot" type="number" min="1" value="144" onblur="if(typeof onBloomeryMBChange === 'function') onBloomeryMBChange(this.value)">
+          <input id="mb-per-ingot" type="number" min="1" value="144">
           <div class="preset-btns">
-            <button type="button" class="btn-xs" onclick="document.getElementById('mb-per-ingot').value = 144">144</button>
-            <button type="button" class="btn-xs" onclick="document.getElementById('mb-per-ingot').value = 100">100</button>
+            <button type="button" class="btn-xs" id="mb-preset-144">144</button>
+            <button type="button" class="btn-xs" id="mb-preset-100">100</button>
           </div>
         </div>
       </div>
@@ -77,16 +77,16 @@
         <div class="coeff-list" id="iron-coeff-list"></div>
 
         <div class="coeff-actions">
-          <button class="btn-xs" onclick="bloomeryAddCoeff()">+ Add Coefficient</button>
+          <button class="btn-xs" id="bloomery-add-coeff">+ Add Coefficient</button>
           <div style="width:1px;height:16px;background:var(--border)"></div>
-          <button class="btn-xs" onclick="bloomeryApplyPreset('A')">144/36/16</button>
-          <button class="btn-xs" onclick="bloomeryApplyPreset('B')">129/31/13</button>
+          <button class="btn-xs" id="bloomery-preset-a">144/36/16</button>
+          <button class="btn-xs" id="bloomery-preset-b">129/31/13</button>
         </div>
       </div>
 
       <!-- Calculate Bar -->
       <div class="calc-bar">
-        <button id="bloomery-calc-btn" class="btn-calc" onclick="bloomeryCalculate()">
+        <button id="bloomery-calc-btn" class="btn-calc">
           <svg viewBox="0 0 20 20" fill="none"><path d="M10 2L18 18H2L10 2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="10" cy="12" r="2" fill="currentColor"/></svg>
           Calculate
         </button>
@@ -138,7 +138,7 @@
 
             <!-- All Results Table (Expandable) -->
             <div class="expandable-section">
-              <button class="expandable-toggle" id="bloomery-table-toggle" onclick="toggleBloomeryTable()">
+              <button class="expandable-toggle" id="bloomery-table-toggle">
                 <span>All Calculated Points</span>
                 <div class="expandable-toggle-right">
                   <span id="bloomery-points-count">0 points</span>

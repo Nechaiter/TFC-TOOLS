@@ -21,9 +21,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   
-  <script src="Pages/routing.js"></script>
-  <link href="Pages/Styles/base.css" rel="stylesheet">
-  <link href="Pages/index.css" rel="stylesheet">
+  <script src="/dist/routing.js"></script>
+  <link href="pages/styles/base.css" rel="stylesheet">
+  <link href="pages/index.css" rel="stylesheet">
 
   
 </head>
@@ -47,7 +47,7 @@
 
     <div class="menu-grid">
       <!-- Bloomery Card -->
-      <button class="menu-card" onclick="showView('Bloomery')">
+      <button class="menu-card" id="menu-bloomery">
         <div class="menu-card-head">
           <div class="menu-card-icon">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -67,7 +67,7 @@
       </button>
 
       <!-- Alloys Card -->
-      <button class="menu-card" onclick="showView('vessel_alloys')">
+      <button class="menu-card" id="menu-alloys">
         <div class="menu-card-head">
           <div class="menu-card-icon">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -84,7 +84,7 @@
         </span>
       </button>
 
-      <button class="menu-card" onclick="showView('forge')">
+      <button class="menu-card" id="menu-forge">
         <div class="menu-card-head">
           <div class="menu-card-icon">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
