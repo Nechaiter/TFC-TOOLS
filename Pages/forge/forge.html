@@ -24,25 +24,25 @@
   <script src="https://cdn.jsdelivr.net/npm/drag-drop-touch@1.3.1/DragDropTouch.min.js"></script>
 
   <link href="./forge.css" rel="stylesheet">
-  <link href="../Styles/base.css" rel="stylesheet">
-  <link href="../Styles/navbar.css" rel="stylesheet">
-  <link href="../Styles/items.css" rel="stylesheet">
+  <link href="../styles/base.css" rel="stylesheet">
+  <link href="../styles/navbar.css" rel="stylesheet">
+  <link href="../styles/items.css" rel="stylesheet">
 
-  <script src="../routing.js"></script>
-  <script src="forge.js"></script>
-  <script src="forge_steps_algorithms.js"></script>
+  <script src="/dist/routing.js"></script>
+  <script type="module" src="/dist/pages/forge/forge.js"></script>
+  <script type="module" src="/dist/pages/forge/forge_steps_algorithms.js"></script>
 </head>
 <body>
 
   <!-- ==================== NAVIGATION ==================== -->
   <nav id="nav" class="nav">
-    <button class="nav-back" onclick="showView('menu')">
+    <button class="nav-back" id="nav-back-menu">
       <svg viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       Back to Menu
     </button>
     <div class="nav-divider"></div>
-    <button id="nav-bloomery" class="nav-link" onclick="showView('Bloomery')">Bloomery</button>
-    <button id="nav-alloys" class="nav-link" onclick="showView('vessel_alloys')">Alloys</button>
+    <button id="nav-bloomery" class="nav-link">Bloomery</button>
+    <button id="nav-alloys" class="nav-link">Alloys</button>
     <button id="nav-forge" class="nav-link">Forge</button>
 
   </nav>
@@ -84,7 +84,7 @@
         <div class="forge-recipe-section">
           <div class="recipe-header">
             <h3 class="section-title">Recipe Composition</h3>
-            <button class="btn-clear-all" onclick="clearAllRecipe()">Clear All</button>
+            <button class="btn-clear-all">Clear All</button>
           </div>
           <p class="section-desc">Drag forge steps and priorities to build your recipe</p>
 
@@ -115,7 +115,7 @@
           </div>
         </div>
         <div class="calc-bar">
-          <button id="forge-calc-btn" class="btn-calc" onclick="forge_step_calculate()">
+          <button id="forge-calc-btn" class="btn-calc">
             <svg viewBox="0 0 20 20" fill="none"><path d="M10 2L18 18H2L10 2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="10" cy="12" r="2" fill="currentColor"/></svg>
             Calculate
           </button>
@@ -137,7 +137,7 @@
     <div id="forge-results-wrap" class="results-section hidden">
         <!-- Expandable All-Points Table -->
         <div class="expandable-section">
-          <button class="expandable-toggle" id="step-table-toggle" onclick="toggleStepTable()">
+          <button class="expandable-toggle" id="step-table-toggle">
             <span>All Calculated steps</span>
             <div class="expandable-toggle-right">
               <span id="step-points-count">0 steps</span>

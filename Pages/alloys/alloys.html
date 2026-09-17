@@ -20,29 +20,29 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   
-  <link href="./vessel_alloys.css" rel="stylesheet">
-  <link href="../Styles/base.css" rel="stylesheet">
-  <link href="../Styles/navbar.css" rel="stylesheet">
-  <link href="../Styles/items.css" rel="stylesheet">
+  <link href="./alloys.css" rel="stylesheet">
+  <link href="../styles/base.css" rel="stylesheet">
+  <link href="../styles/navbar.css" rel="stylesheet">
+  <link href="../styles/items.css" rel="stylesheet">
   
   
   <script src="https://www.desmos.com/api/v1.8/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6"></script>
-  <script src="../routing.js"></script>
-  <script src="vessel_alloys.js"></script>
+  <script src="/dist/routing.js"></script>
+  <script type="module" src="/dist/pages/alloys/alloys.js"></script>
 </head>
 <body>
 
   <!-- ==================== NAVIGATION ==================== -->
   <nav id="nav" class="nav">
-    <button class="nav-back" onclick="showView('menu')">
+    <button class="nav-back" id="nav-back-menu">
       <svg viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       Back to Menu
     </button>
     <div class="nav-divider"></div>
 
-    <button id="nav-bloomery" class="nav-link" onclick="showView('Bloomery')">Bloomery</button>
+    <button id="nav-bloomery" class="nav-link">Bloomery</button>
     <button id="nav-alloys" class="nav-link">Alloys</button>
-    <button id="nav-forge" class="nav-link" onclick="showView('forge')">Forge</button>
+    <button id="nav-forge" class="nav-link">Forge</button>
 
   </nav>
 
@@ -58,8 +58,8 @@
           <label for="alloy-mb-per-ingot">mB per ingot:</label>
           <input id="alloy-mb-per-ingot" type="number" min="1" value="144">
           <div class="preset-btns">
-            <button type="button" class="btn-xs" onclick="document.getElementById('alloy-mb-per-ingot').value = 144">144</button>
-            <button type="button" class="btn-xs" onclick="document.getElementById('alloy-mb-per-ingot').value = 100">100</button>
+            <button type="button" class="btn-xs" id="alloy-mb-preset-144">144</button>
+            <button type="button" class="btn-xs" id="alloy-mb-preset-100">100</button>
           </div>
         </div>
         
@@ -67,8 +67,8 @@
           <label for="alloy-max-vessel">Vessel Max (mB):</label>
           <input id="alloy-max-vessel" type="number" min="1" value="3024">
           <div class="preset-btns">
-            <button type="button" class="btn-xs" onclick="document.getElementById('alloy-max-vessel').value = 3024">3024</button>
-            <button type="button" class="btn-xs" onclick="document.getElementById('alloy-max-vessel').value = 3000">3000</button>
+            <button type="button" class="btn-xs" id="alloy-vessel-preset-3024">3024</button>
+            <button type="button" class="btn-xs" id="alloy-vessel-preset-3000">3000</button>
           </div>
         </div>
       </div>
@@ -77,7 +77,7 @@
       <div id="alloys-minerals" class="minerals-grid"></div>
       
       <div style="display: flex; justify-content: center; margin-top: 1rem;">
-        <button id="add-mineral-btn" class="btn-xs" style="padding: 8px 16px;" onclick="alloysAddMineral()">+ Add Mineral</button>
+        <button id="add-mineral-btn" class="btn-xs" style="padding: 8px 16px;">+ Add Mineral</button>
       </div>
 
       <div class="calc-bar hidden" id="ratios-warning">
@@ -85,7 +85,7 @@
       </div>
       <!-- Calculate Bar -->
       <div class="calc-bar">
-        <button id="alloy-calc-btn" class="btn-calc" onclick="alloysCalculate()">
+        <button id="alloy-calc-btn" class="btn-calc">
           <svg viewBox="0 0 20 20" fill="none"><path d="M10 2L18 18H2L10 2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="10" cy="12" r="2" fill="currentColor"/></svg>
           Calculate
         </button>
@@ -97,7 +97,7 @@
 
         <!-- Expandable All-Points Table -->
         <div class="expandable-section">
-          <button class="expandable-toggle" id="alloy-table-toggle" onclick="toggleAlloyTable()">
+          <button class="expandable-toggle" id="alloy-table-toggle">
             <span>All Calculated Points</span>
             <div class="expandable-toggle-right">
               <span id="alloy-points-count">0 points</span>

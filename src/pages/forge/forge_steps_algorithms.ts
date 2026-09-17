@@ -1,15 +1,19 @@
-// Greedy Algorithm
-// is better to use -3 or -6,-9 on hits values?
-// TODO, PROFF THIS ALGO IS NEVER GOING TO BE IN A INFINITE LOOP
-// from 0 to the sum_items target 
-function GreedyAlgorithm(target_pos,steps_available){
+// Greedy algorithm.
+// Is it better to use -3, -6, or -9 hit values?
+// TODO: prove this algorithm never goes into an infinite loop.
+// From 0 to the sum_items target.
+type StepData = { value: number };
+type StepsAvailable = Record<string, StepData>;
+type StepObject = StepData & { key: string };
+
+export function GreedyAlgorithm(target_pos: number, steps_available: StepsAvailable): string[] {
     const startTime = performance.now();
 
 
     let initial_poss=0
-    let step_object
+    let step_object!: StepObject
     let maxIterations = 1000;
-    let steps_to_target=[]
+    let steps_to_target: string[] = []
     while (initial_poss!=target_pos && maxIterations-- >0){
         let closest_step_to_target=Infinity
         Object.entries(steps_available).forEach(([key,step_data])=>{
@@ -29,14 +33,14 @@ function GreedyAlgorithm(target_pos,steps_available){
     return steps_to_target
 }
 
-// TODO proff that from default values of steps, the target is never beyond 8 of depth
-function short_path(target_pos,steps_available){
+// TODO: prove that, given the default step values, the target is never beyond 8 steps deep.
+export function short_path(target_pos: number, steps_available: StepsAvailable): string[] {
     const startTime = performance.now();
-    let steps_value = new Set()
+    let steps_value = new Set<number>()
     Object.entries(steps_available).forEach(([key, step]) => {
         steps_value.add(step.value)
     })
-    function dfs(current_node,target_pos, depth,path,visited){
+    function dfs(current_node: number, target_pos: number, depth: number, path: string[], visited: Set<number>): string[] | null {
         if (current_node===target_pos) return path
         // Goes beyond the defined depth
         if (depth <=0) return null

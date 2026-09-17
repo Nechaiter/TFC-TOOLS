@@ -1,4 +1,4 @@
-function showView(view) {
+function showView(view:string): void {
   const path = window.location.pathname;
   // /Pages/Bloomery/Bloomery.html)
   const isInsidePages = path.indexOf('Pages') > -1 || path.indexOf('pages') > -1;
@@ -14,7 +14,13 @@ function showView(view) {
     if (isInsidePages) {
       window.location.href = '../' + targetPath;
     } else {
-      window.location.href = 'Pages/' + targetPath;
+      window.location.href = 'pages/' + targetPath;
     }
   }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('menu-bloomery')?.addEventListener('click', () => showView('Bloomery'));
+  document.getElementById('menu-alloys')?.addEventListener('click', () => showView('alloys'));
+  document.getElementById('menu-forge')?.addEventListener('click', () => showView('forge'));
+});
