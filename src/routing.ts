@@ -1,7 +1,6 @@
 function showView(view:string): void {
   const path = window.location.pathname;
-  // /Pages/Bloomery/Bloomery.html)
-  const isInsidePages = path.indexOf('Pages') > -1 || path.indexOf('pages') > -1;
+  const isInsidePages = path.toLowerCase().includes('/pages/');
 
   if (view === 'menu') {
     if (isInsidePages) {
@@ -10,7 +9,9 @@ function showView(view:string): void {
       window.location.href = 'index.html'; 
     }
   } else {
-    const targetPath = view + '/' + view + '.html';
+    const targetPath = view === 'Bloomery'
+      ? 'bloomery/Bloomery.html'
+      : `${view}/${view}.html`;
     if (isInsidePages) {
       window.location.href = '../' + targetPath;
     } else {
