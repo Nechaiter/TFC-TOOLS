@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-CVLDGPGT7G"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-CVLDGPGT7G');
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#12151e">
+  <title>TFC Ratios - Forge</title>
+  <meta name="description" content="Interactive calculator for TerraFirmaCraft Forge sequencing">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+
+  <!-- drag touch drop -->
+  <script src="https://cdn.jsdelivr.net/npm/drag-drop-touch@1.3.1/DragDropTouch.min.js"></script>
+
+  <link href="./forge.css" rel="stylesheet">
+  <link href="../styles/base.css" rel="stylesheet">
+  <link href="../styles/navbar.css" rel="stylesheet">
+  <link href="../styles/items.css" rel="stylesheet">
+
+  <script src="../../dist/routing.js"></script>
+  <script type="module" src="../../dist/pages/forge/forge.js"></script>
+  <script type="module" src="../../dist/pages/forge/forge_steps_algorithms.js"></script>
+</head>
+<body>
+
+  <!-- ==================== NAVIGATION ==================== -->
+  <nav id="nav" class="nav">
+    <button class="nav-back" id="nav-back-menu">
+      <svg viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Back to Menu
+    </button>
+    <div class="nav-divider"></div>
+    <button id="nav-bloomery" class="nav-link">Bloomery</button>
+    <button id="nav-alloys" class="nav-link">Alloys</button>
+    <button id="nav-forge" class="nav-link">Forge</button>
+
+  </nav>
+
+  <section id="view-forge" class="page">
+    <div class="forge-full">
+      <header class="page-header">
+        <h1>Forge Calculator</h1>
+        <p>Build your forging recipe by combining steps and priorities.</p>
+        <div class="target-instruction">
+          <div style="flex: 1;">
+            <p style="color:aliceblue; margin-bottom: 12px; margin-top: 0;">
+              Move the <span style="color: #00ff00;">green crosshair</span> below the <span style="color: #ff4444;">red crosshair</span> to complete the calculation.<br>
+              <span style="color: #ffd700;">Or, set the target numerically below (starts from 0):</span>
+            </p>
+            <div class="config-group">
+              <label for="forge-target-value">Target (red crosshair):</label>
+              <input id="forge-target-value" type="number" value="" placeholder="ex: 80">
+            </div>
+          </div>
+          <img src="./Images/target.png" alt="Target alignment example" class="target-img">
+        </div>
+      </header>
+
+      
+      
+
+      <!-- ==================== PRIORITY OPTIONS ==================== -->
+      <div class="priority-section user-select">
+        <h3 class="section-title">Priority Levels</h3>
+        <p class="section-desc">Drag a priority to the recipe slots</p>
+
+        <div class="priority-grid" id="priority-grid"></div>
+      </div>
+
+      <!-- ==================== RECIPE SLOTS (MAIN) ==================== -->
+      <div class="forge-anvil-container user-select">
+        
+        <div class="forge-recipe-section">
+          <div class="recipe-header">
+            <h3 class="section-title">Recipe Composition</h3>
+            <button class="btn-clear-all">Clear All</button>
+          </div>
+          <p class="section-desc">Drag forge steps and priorities to build your recipe</p>
+
+          <div class="recipe-slots-grid">
+            <!-- SLOT 0 -->
+            <div class="recipe-slot" data-slot="0">
+              <div class="slot-priority" id="recipe-0-priority" data-slot="0">
+              </div>
+              <div class="slot-step" id="recipe-0-step" data-slot="0">
+              </div>
+            </div>
+
+            <!-- SLOT 1 -->
+            <div class="recipe-slot" >
+              <div class="slot-priority" id="recipe-1-priority" data-slot="1">
+              </div>
+              <div class="slot-step" id="recipe-1-step" data-slot="1">
+              </div>
+            </div>
+
+            <!-- SLOT 2 -->
+            <div class="recipe-slot">
+              <div class="slot-priority" id="recipe-2-priority" data-slot="2">
+              </div>
+              <div class="slot-step" id="recipe-2-step" data-slot="2">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="calc-bar">
+          <button id="forge-calc-btn" class="btn-calc">
+            <svg viewBox="0 0 20 20" fill="none"><path d="M10 2L18 18H2L10 2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="10" cy="12" r="2" fill="currentColor"/></svg>
+            Calculate
+          </button>
+        </div>
+        <!-- ==================== FORGE OPTIONS (BOTTOM) ==================== -->
+        <div class="forge-options-section">
+          <!-- sets draggable pngs -->
+          <h3 class="section-title">Forge Steps Available</h3>
+          <p class="section-desc">Drag steps to the recipe slots</p>
+
+          <div class="options-grid" id="options-grid"></div>
+          
+        </div>
+        
+      </div>
+
+
+      <div id="forge-warning" class="calc-bar hidden user-select"></div>
+    <div id="forge-results-wrap" class="results-section hidden">
+        <!-- Expandable All-Points Table -->
+        <div class="expandable-section">
+          <button class="expandable-toggle" id="step-table-toggle">
+            <span>All Calculated steps</span>
+            <div class="expandable-toggle-right">
+              <span id="step-points-count">0 steps</span>
+              <svg viewBox="0 0 16 16" fill="none"><path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </button>
+          <div class="expandable-body" id="step-table-body">
+            <table class="data-table" id="step-data-table"></table>
+          </div>
+        </div>
+    </div>
+    <!-- sets values -->
+    <!-- <div class="forge-values-section">
+      <br>
+          <h3 class="section-title">Forge Step Values</h3>
+          <p class="section-desc">Define the numeric value (+/-) for each forge step if you needed</p>
+
+          <div class="values-grid" id="values-grid"></div>
+    </div> -->
+          
+    </div>
+  </section>
+
+</body>
+</html>

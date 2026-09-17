@@ -1,0 +1,95 @@
+/* ========== RESET & BASE ========== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+    --bg: #12151e;
+    --bg-card: #181b26;
+    --bg-secondary: #1e2230;
+    --fg: #e2e6f0;
+    --fg-muted: #7a8299;
+    --primary: #d97a2b;
+    --primary-hover: #e8923f;
+    --primary-faded: rgba(217, 122, 43, 0.12);
+    --border: #262a38;
+    --input-bg: #12151e;
+    --destructive: #e05555;
+    --success: #3db88c;
+    --radius: 8px;
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+html { font-size: 16px; }
+body {
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--fg);
+    line-height: 1.5;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+}
+/* ========== UTILITIES ========== */
+.hidden { display: none !important; }
+.mono { font-family: var(--font-mono); }
+
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield; /* Firefox */
+}
+
+/* ========== PAGE LAYOUT ========== */
+.page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+.page-header h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+.page-header p {
+    font-size: 0.875rem;
+    color: var(--fg-muted);
+    margin-top: 6px;
+}
+.two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+@media (max-width: 860px) {
+    .two-col { grid-template-columns: 1fr; }
+    }
+
+/* ========== CARD / SECTION ========== */
+.card {
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+.card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.card-title {
+    font-size: 1rem;
+    font-weight: 600;
+}
+.card-desc {
+    font-size: 0.75rem;
+    color: var(--fg-muted);
+}

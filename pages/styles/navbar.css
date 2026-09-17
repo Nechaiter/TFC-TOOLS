@@ -1,0 +1,40 @@
+/* ========== NAVIGATION ========== */
+.nav {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 24px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-card);
+}
+.nav-back {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    color: var(--fg-muted);
+    font-size: 14px;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    transition: color 0.15s;
+}
+.nav-back:hover { color: var(--fg); }
+.nav-back svg { width: 16px; height: 16px; }
+.nav-divider {
+    width: 1px;
+    height: 16px;
+    background: var(--border);
+}
+.nav-link {
+    background: none;
+    border: none;
+    font-size: 14px;
+    font-family: var(--font-sans);
+    color: var(--fg-muted);
+    cursor: pointer;
+    transition: color 0.15s;
+    padding: 4px 0;
+}
+.nav-link:hover { color: var(--fg); }
+.nav-link.active { color: var(--primary); font-weight: 600; }
